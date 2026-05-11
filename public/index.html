@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規事業開発 AIプラットフォーム</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1a73e8;
+            --secondary: #34a853;
+            --danger: #ea4335;
+            --warning: #fbbc04;
+            --gray-light: #f8f9fa;
+            --gray-border: #dadce0;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        header h1 {
+            color: var(--primary);
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 20px;
+        }
+
+        /* LEFT SIDEBAR - INPUT */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            height: fit-content;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar h2 {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+        .sidebar h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .input-group input[type="number"],
+        .input-group input[type="text"],
+        .input-group input[type="password"],
+        .input-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .input-group input[type="text"]:focus,
+        .input-group input[type="password"]:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+        }
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .tag-container {
+            margin-top: 10px;
+        }
+        .tag-input-wrapper {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .tag-input-wrapper input {
+            flex: 1;
+        }
+        .tag-input-wrapper button {
+            padding: 8px 12px;
+            background: var(--gray-light);
+            border: 1px solid var(--gray-border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        .tag-input-wrapper button:hover {
+            background: #f0f0f0;
+        }
+        .tags-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tag {
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+        }
+        .tag button:hover {
+            opacity: 0.8;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        button {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #1665d4;
+            box-shadow: 0 4px 12px rgba(26,115,232,0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--text-primary);
+            border: 1px solid var(--gray-border);
+        }
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+        .btn-danger:hover {
+            background: #d33b2f;
+        }
+
+        .api-key-note {
+            background: #fff8e1;
+            border: 1px solid #fbbc04;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #d97706;
+            margin-bottom: 15px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* STATUS */
+        .status-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .status-box.loading {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--gray-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* DASHBOARD TABS */
+        .dashboard {
+            display: none;
+        }
+        .dashboard.active {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 10px 16px;
+            background: none;
+            border: 2px solid transparent;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* CARDS */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            font-size: 16px;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        /* BUSINESS CASES */
+        .business-case {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--gray-border);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .business-case:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        .business-case.recommended {
+            border-color: var(--secondary);
+            background: #f0f9f5;
+        }
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        .case-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .case-score {
+            background: var(--primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .case-score.good {
+            background: var(--secondary);
+        }
+        .case-score.warning {
+            background: var(--warning);
+            color: #333;
+        }
+        .case-score.danger {
+            background: var(--danger);
+        }
+
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .case-stat {
+            background: var(--gray-light);
+            padding: 12px;
+            border-radius: 6px;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ANALYSIS SECTIONS */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .analysis-box {
+            background: var(--gray-light);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        .analysis-box h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .analysis-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* COMPETITORS */
+        .competitor-item {
+            background: var(--gray-light);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--warning);
+        }
+        .competitor-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        .competitor-info {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* FINANCIAL MODEL */
+        .financial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        .financial-table th {
+            background: var(--gray-light);
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--gray-border);
+        }
+        .financial-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+        .financial-table tr:nth-child(even) {
+            background: var(--gray-light);
+        }
+
+        /* RECOMMENDATION */
+        .recommendation {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .recommendation h3 {
+            color: var(--primary);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .recommendation p {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+
+        /* ARCHIVE */
+        .archive-item {
+            background: white;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .archive-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        .archive-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .archive-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .archive-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .archive-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        .archive-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-light);
+        }
+        .archive-content.expanded {
+            display: block;
+        }
+        .archive-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .archive-buttons button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        /* EXPORT */
+        .export-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-export {
+            flex: 1;
+            padding: 12px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-export:hover {
+            background: #1665d4;
+            box-shadow: 0 4px 12px rgba(26,115,232,0.4);
+        }
+
+        .archive-save-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .archive-save-dialog.hidden {
+            display: none;
+        }
+        .dialog-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .dialog-content h3 {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+        .dialog-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .dialog-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-border);
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .dialog-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .dialog-buttons button {
+            flex: 1;
+        }
+
+        .error-message {
+            background: #fce4ec;
+            border: 1px solid var(--danger);
+            padding: 15px;
+            border-radius: 6px;
+            color: var(--danger);
+            margin-bottom: 20px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+            .case-grid {
+                grid-template-columns: 1fr;
+            }
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* PDF STYLE */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .sidebar, .tabs, .export-section {
+                display: none;
+            }
+            .dashboard {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 新規事業開発 AIプラットフォーム</h1>
+            <p>目標利益 × USP × 業界キーワードから、事業案を AI が自動生成・分析。3C・STP・財務モデルまで一括提供</p>
+        </header>
+
+        <div class="layout">
+            <!-- SIDEBAR INPUT -->
+            <aside class="sidebar">
+                <h2>入力情報</h2>
+
+                <div class="api-key-note">
+                    ⚠️ API キーはブラウザに保存されません。安全に使用できます。
+                </div>
+
+                <div class="input-group">
+                    <label>Anthropic API キー</label>
+                    <input type="password" id="api-key" placeholder="sk-..." autocomplete="off">
+                    <small style="color: #666; margin-top: 4px; display: block;">
+                        <a href="https://console.anthropic.com/account/keys" target="_blank" style="color: var(--primary);">API キーを取得</a>
+                    </small>
+                </div>
+
+                <h3>目標</h3>
+                <div class="input-group">
+                    <label>目標月粗利（万円）</label>
+                    <input type="number" id="target_gross_margin" value="300" min="1">
+                </div>
+
+                <div class="input-group">
+                    <label>目標月純利益（万円）</label>
+                    <input type="number" id="target_net_profit" value="100" min="1">
+                </div>
+
+                <h3>経営資産</h3>
+                <div class="input-group">
+                    <label>主な USP・強み（複数入力可）</label>
+                    <div class="tag-container">
+                        <div class="tag-input-wrapper">
+                            <input type="text" id="usp-input" placeholder="例：AI分析基盤">
+                            <button onclick="addTag('usp')">追加</button>
+                        </div>
+                        <div class="tags-display" id="usp-tags"></div>
+                    </div>
+                </div>
+
+                <h3>市場</h3>
+                <div class="input-group">
+                    <label>興味ある業界・キーワード（複数入力可）</label>
+                    <div class="tag-container">
+                        <div class="tag-input-wrapper">
+                            <input type="text" id="industry-input" placeholder="例：不動産、SaaS">
+                            <button onclick="addTag('industry')">追加</button>
+                        </div>
+                        <div class="tags-display" id="industry-tags"></div>
+                    </div>
+                </div>
+
+                <h3>コンテキスト</h3>
+                <div class="input-group">
+                    <label>追加情報（任意）</label>
+                    <textarea id="context" placeholder="現在の課題、市場観、技術スタック等"></textarea>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-primary" id="generate-btn" onclick="generateBusinessCases()">事業案を生成・分析</button>
+                    <button class="btn-secondary" id="reset-btn" onclick="resetForm()">リセット</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <div id="error-box" class="error-message hidden"></div>
+
+                <div id="status-box" class="status-box hidden">
+                    <div class="loading">
+                        <span class="spinner"></span>
+                        AI が事業案を分析中... お待ちください（1～2分）
+                    </div>
+                </div>
+
+                <div id="dashboard" class="dashboard">
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab(this, 'overview')">概要</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'cases')">事業案一覧</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'analysis')">詳細分析</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'competitors')">競合分析</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'financial')">財務モデル</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'recommendation')">推奨アクション</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'archive')">📋 アーカイブ</button>
+                    </div>
+
+                    <!-- OVERVIEW TAB -->
+                    <div id="overview" class="tab-content active">
+                        <div class="card">
+                            <h3>分析概要</h3>
+                            <div id="overview-content"></div>
+                            <div class="export-section">
+                                <button class="btn-export" onclick="openArchiveDialog()">💾 この結果をアーカイブに保存</button>
+                                <button class="btn-export" onclick="exportPDF()" style="background: #34a853;">📄 PDF でダウンロード</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CASES TAB -->
+                    <div id="cases" class="tab-content">
+                        <div id="cases-content"></div>
+                    </div>
+
+                    <!-- ANALYSIS TAB -->
+                    <div id="analysis" class="tab-content">
+                        <div id="analysis-content"></div>
+                    </div>
+
+                    <!-- COMPETITORS TAB -->
+                    <div id="competitors" class="tab-content">
+                        <div id="competitors-content"></div>
+                    </div>
+
+                    <!-- FINANCIAL TAB -->
+                    <div id="financial" class="tab-content">
+                        <div id="financial-content"></div>
+                    </div>
+
+                    <!-- RECOMMENDATION TAB -->
+                    <div id="recommendation" class="tab-content">
+                        <div id="recommendation-content"></div>
+                    </div>
+
+                    <!-- ARCHIVE TAB -->
+                    <div id="archive" class="tab-content">
+                        <div class="card">
+                            <h3>分析履歴アーカイブ</h3>
+                            <div id="archive-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ARCHIVE SAVE DIALOG -->
+    <div id="archive-dialog" class="archive-save-dialog hidden">
+        <div class="dialog-content">
+            <h3>この分析結果をアーカイブに保存</h3>
+            <p>この分析の名前を入力してください。後で簡単に見返すことができます。</p>
+            <input type="text" id="archive-name-input" class="dialog-input" placeholder="例：2024年 Q1 新規事業検討">
+            <div class="dialog-buttons">
+                <button class="btn-secondary" onclick="closeArchiveDialog()">キャンセル</button>
+                <button class="btn-primary" onclick="saveToArchive()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let businessCases = [];
+        let usps = [];
+        let industries = [];
+        let currentAnalysisData = null;
+
+        // ローカルストレージからアーカイブを読み込む
+        function loadArchives() {
+            const data = localStorage.getItem('business_archives');
+            return data ? JSON.parse(data) : [];
+        }
+
+        // アーカイブを保存
+        function saveArchives(archives) {
+            localStorage.setItem('business_archives', JSON.stringify(archives));
+        }
+
+        function addTag(type) {
+            const inputId = type === 'usp' ? 'usp-input' : 'industry-input';
+            const value = document.getElementById(inputId).value.trim();
+            
+            if (!value) return;
+            
+            const arr = type === 'usp' ? usps : industries;
+            if (!arr.includes(value)) {
+                arr.push(value);
+            }
+            
+            document.getElementById(inputId).value = '';
+            renderTags(type);
+        }
+
+        function removeTag(type, value) {
+            const arr = type === 'usp' ? usps : industries;
+            const idx = arr.indexOf(value);
+            if (idx > -1) arr.splice(idx, 1);
+            renderTags(type);
+        }
+
+        function renderTags(type) {
+            const arr = type === 'usp' ? usps : industries;
+            const container = document.getElementById(`${type}-tags`);
+            container.innerHTML = arr.map(tag => `
+                <div class="tag">
+                    ${escapeHtml(tag)}
+                    <button onclick="removeTag('${type}', '${escapeHtml(tag)}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function showError(message) {
+            const box = document.getElementById('error-box');
+            box.textContent = '❌ ' + message;
+            box.classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('error-box').classList.add('hidden');
+        }
+
+        async function generateBusinessCases() {
+            hideError();
+
+            const apiKey = document.getElementById('api-key').value.trim();
+            const targetMargin = parseFloat(document.getElementById('target_gross_margin').value);
+            const targetProfit = parseFloat(document.getElementById('target_net_profit').value);
+            const context = document.getElementById('context').value.trim();
+
+            if (!apiKey) {
+                showError('API キーを入力してください');
+                return;
+            }
+            if (!targetMargin || !targetProfit) {
+                showError('目標粗利と純利益を入力してください');
+                return;
+            }
+            if (usps.length === 0) {
+                showError('USP・強みを最低1つ以上入力してください');
+                return;
+            }
+            if (industries.length === 0) {
+                showError('興味ある業界・キーワードを最低1つ以上入力してください');
+                return;
+            }
+
+            document.getElementById('status-box').classList.remove('hidden');
+            document.getElementById('dashboard').classList.remove('active');
+
+            try {
+                const prompt = `あなたは新規事業開発の専門家です。以下の条件に基づいて、3～5個の新規事業案を生成・分析してください。
+
+【条件】
+- 目標月粗利：${targetMargin}万円
+- 目標月純利益：${targetProfit}万円
+- 自社の USP・強み：${usps.join('、')}
+- 興味ある業界/キーワード：${industries.join('、')}
+${context ? `- 追加コンテキスト：${context}` : ''}
+
+【生成される各事業案に含めること】
+1. 事業名と概要（1行）
+2. ビジネスモデル（B2B / B2C / B2B2C など）
+3. 主な顧客層
+4. 収益源
+5. 初期投資額の推定（万円）
+6. 売上化までのリードタイム（ヶ月）
+7. 3年目の想定売上・粗利
+8. 実現可能性スコア（1-10）
+9. 市場性スコア（1-10）
+10. 競争力スコア（1-10）
+11. 主な競合企業（名称と特徴）
+12. 想定される顧客セグメント（STP分析）
+
+JSON形式で、以下のスキーマに沿って出力してください：
+
+\`\`\`json
+{
+  "cases": [
+    {
+      "name": "事業名",
+      "overview": "概要",
+      "businessModel": "B2B / B2C など",
+      "targetCustomers": "顧客層",
+      "revenueStreams": ["収益源1", "収益源2"],
+      "initialInvestment": 数値,
+      "leadtimeMonths": 数値,
+      "year3Revenue": 数値,
+      "year3GrossMargin": 数値,
+      "realizabilityScore": 数値,
+      "marketScore": 数値,
+      "competitionScore": 数値,
+      "competitors": [
+        {
+          "name": "企業名",
+          "characteristics": "特徴",
+          "estimatedRevenue": "推定売上"
+        }
+      ],
+      "stpAnalysis": {
+        "segmentation": "セグメンテーション",
+        "targeting": "ターゲティング",
+        "positioning": "ポジショニング"
+      },
+      "swotAnalysis": {
+        "strengths": ["強み1"],
+        "weaknesses": ["弱み1"],
+        "opportunities": ["機会1"],
+        "threats": ["脅威1"]
+      }
+    }
+  ],
+  "summary": "全体的な分析サマリー"
+}
+\`\`\``;
+
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 4000,
+                        messages: [{ role: 'user', content: prompt }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error?.message || 'API エラーが発生しました');
+                }
+
+                const data = await response.json();
+                const content = data.content[0].text;
+
+                const jsonMatch = content.match(/```json\n?([\s\S]*?)\n?```/);
+                if (!jsonMatch) {
+                    throw new Error('JSON 形式の応答が得られませんでした。もう一度試してください。');
+                }
+
+                const analysisData = JSON.parse(jsonMatch[1]);
+                businessCases = analysisData.cases;
+                currentAnalysisData = analysisData;
+
+                renderDashboard(analysisData);
+                document.getElementById('status-box').classList.add('hidden');
+                document.getElementById('dashboard').classList.add('active');
+
+            } catch (error) {
+                console.error(error);
+                showError(error.message || 'エラーが発生しました。API キーと入力内容を確認してください。');
+                document.getElementById('status-box').classList.add('hidden');
+            }
+        }
+
+        function renderDashboard(data) {
+            // OVERVIEW
+            document.getElementById('overview-content').innerHTML = `
+                <p><strong>分析日時：</strong> ${new Date().toLocaleString('ja-JP')}</p>
+                <p><strong>入力条件：</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>目標月粗利：${document.getElementById('target_gross_margin').value}万円</li>
+                    <li>目標月純利益：${document.getElementById('target_net_profit').value}万円</li>
+                    <li>USP・強み：${usps.join('、')}</li>
+                    <li>興味ある業界：${industries.join('、')}</li>
+                </ul>
+                <p style="margin-top: 15px; color: #5f6368; line-height: 1.8;">${escapeHtml(data.summary)}</p>
+            `;
+
+            // CASES
+            const casesHtml = businessCases.map((c, idx) => {
+                const totalScore = (c.realizabilityScore + c.marketScore + c.competitionScore) / 3;
+                const isRecommended = totalScore > 7;
+                return `
+                    <div class="business-case ${isRecommended ? 'recommended' : ''}">
+                        <div class="case-header">
+                            <div>
+                                <div class="case-title">${idx + 1}. ${escapeHtml(c.name)}</div>
+                                <div style="font-size: 13px; color: #5f6368; margin-top: 4px;">${escapeHtml(c.overview)}</div>
+                            </div>
+                            <div class="case-score ${totalScore > 8 ? 'good' : totalScore > 6 ? 'warning' : 'danger'}">
+                                総合: ${totalScore.toFixed(1)}/10
+                            </div>
+                        </div>
+                        <div class="case-grid">
+                            <div class="case-stat">
+                                <div class="stat-label">ビジネスモデル</div>
+                                <div class="stat-value" style="font-size: 14px;">${escapeHtml(c.businessModel)}</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-label">初期投資</div>
+                                <div class="stat-value">${c.initialInvestment}万円</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-label">売上化まで</div>
+                                <div class="stat-value">${c.leadtimeMonths}ヶ月</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-label">3年目売上</div>
+                                <div class="stat-value">${c.year3Revenue}万円</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-label">3年目粗利</div>
+                                <div class="stat-value">${c.year3GrossMargin}万円</div>
+                            </div>
+                            <div class="case-stat">
+                                <div class="stat-label">ターゲット層</div>
+                                <div class="stat-value" style="font-size: 12px;">${escapeHtml(c.targetCustomers)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('cases-content').innerHTML = casesHtml;
+
+            // ANALYSIS
+            const analysisHtml = businessCases.map((c, idx) => `
+                <div class="card">
+                    <h3>${idx + 1}. ${escapeHtml(c.name)} - 詳細分析</h3>
+                    <div class="analysis-grid">
+                        <div class="analysis-box">
+                            <h4>Strengths（強み）</h4>
+                            <p>${c.swotAnalysis.strengths.map(s => escapeHtml(s)).join(' / ')}</p>
+                        </div>
+                        <div class="analysis-box" style="border-left-color: #ea4335;">
+                            <h4>Weaknesses（弱み）</h4>
+                            <p>${c.swotAnalysis.weaknesses.map(w => escapeHtml(w)).join(' / ')}</p>
+                        </div>
+                        <div class="analysis-box" style="border-left-color: #34a853;">
+                            <h4>Opportunities（機会）</h4>
+                            <p>${c.swotAnalysis.opportunities.map(o => escapeHtml(o)).join(' / ')}</p>
+                        </div>
+                        <div class="analysis-box" style="border-left-color: #fbbc04;">
+                            <h4>Threats（脅威）</h4>
+                            <p>${c.swotAnalysis.threats.map(t => escapeHtml(t)).join(' / ')}</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">STP分析</h4>
+                        <div class="analysis-box" style="margin-bottom: 10px;">
+                            <h4 style="font-size: 12px;">Segmentation</h4>
+                            <p>${escapeHtml(c.stpAnalysis.segmentation)}</p>
+                        </div>
+                        <div class="analysis-box" style="margin-bottom: 10px;">
+                            <h4 style="font-size: 12px;">Targeting</h4>
+                            <p>${escapeHtml(c.stpAnalysis.targeting)}</p>
+                        </div>
+                        <div class="analysis-box">
+                            <h4 style="font-size: 12px;">Positioning</h4>
+                            <p>${escapeHtml(c.stpAnalysis.positioning)}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('analysis-content').innerHTML = analysisHtml;
+
+            // COMPETITORS
+            const competitorsHtml = businessCases.map((c, idx) => `
+                <div class="card">
+                    <h3>${idx + 1}. ${escapeHtml(c.name)} - 競合分析</h3>
+                    ${c.competitors.map(comp => `
+                        <div class="competitor-item">
+                            <div class="competitor-name">${escapeHtml(comp.name)}</div>
+                            <div class="competitor-info"><strong>特徴：</strong> ${escapeHtml(comp.characteristics)}</div>
+                            <div class="competitor-info"><strong>推定売上：</strong> ${escapeHtml(comp.estimatedRevenue)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+            document.getElementById('competitors-content').innerHTML = competitorsHtml;
+
+            // FINANCIAL
+            const financialHtml = businessCases.map((c, idx) => `
+                <div class="card">
+                    <h3>${idx + 1}. ${escapeHtml(c.name)} - 財務モデル</h3>
+                    <table class="financial-table">
+                        <tr>
+                            <th>項目</th>
+                            <th>Year 1</th>
+                            <th>Year 2</th>
+                            <th>Year 3</th>
+                        </tr>
+                        <tr>
+                            <td>売上（万円）</td>
+                            <td>${Math.round(c.year3Revenue * 0.3)}</td>
+                            <td>${Math.round(c.year3Revenue * 0.7)}</td>
+                            <td>${c.year3Revenue}</td>
+                        </tr>
+                        <tr>
+                            <td>粗利（万円）</td>
+                            <td>${Math.round(c.year3GrossMargin * 0.3)}</td>
+                            <td>${Math.round(c.year3GrossMargin * 0.7)}</td>
+                            <td>${c.year3GrossMargin}</td>
+                        </tr>
+                        <tr>
+                            <td>初期投資費用</td>
+                            <td>${c.initialInvestment}</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>ROI (%)</td>
+                            <td>${Math.round((Math.round(c.year3GrossMargin * 0.3) / c.initialInvestment) * 100)}%</td>
+                            <td>${Math.round(((Math.round(c.year3GrossMargin * 0.3) + Math.round(c.year3GrossMargin * 0.7)) / c.initialInvestment) * 100)}%</td>
+                            <td>${Math.round((c.year3GrossMargin / c.initialInvestment) * 100)}%</td>
+                        </tr>
+                    </table>
+                </div>
+            `).join('');
+            document.getElementById('financial-content').innerHTML = financialHtml;
+
+            // RECOMMENDATION
+            const topCase = businessCases.reduce((a, b) => 
+                ((a.realizabilityScore + a.marketScore + a.competitionScore) > 
+                 (b.realizabilityScore + b.marketScore + b.competitionScore)) ? a : b
+            );
+            const recommendation = `
+                <div class="recommendation">
+                    <h3>🎯 推奨される進出戦略</h3>
+                    <p><strong>最優先候補：${escapeHtml(topCase.name)}</strong></p>
+                    <p>このビジネスモデルは、初期投資${topCase.initialInvestment}万円で${topCase.leadtimeMonths}ヶ月での売上化が見込まれます。${topCase.year3Revenue}万円の売上に対して${topCase.year3GrossMargin}万円の粗利が期待でき、目標値を達成できるポテンシャルがあります。</p>
+                    <p><strong>次のステップ：</strong></p>
+                    <p>1. ${escapeHtml(topCase.targetCustomers)}に対して仮説検証インタビューを実施<br>
+                    2. MVP開発・最小実装計画の立案<br>
+                    3. 最初の3社顧客との契約を目指す<br>
+                    4. 4週間ごとに進捗レビューを実施</p>
+                </div>
+            `;
+            document.getElementById('recommendation-content').innerHTML = recommendation;
+
+            // ARCHIVE を更新
+            renderArchiveList();
+        }
+
+        function openArchiveDialog() {
+            document.getElementById('archive-dialog').classList.remove('hidden');
+            document.getElementById('archive-name-input').focus();
+        }
+
+        function closeArchiveDialog() {
+            document.getElementById('archive-dialog').classList.add('hidden');
+            document.getElementById('archive-name-input').value = '';
+        }
+
+        function saveToArchive() {
+            const name = document.getElementById('archive-name-input').value.trim();
+            if (!name) {
+                alert('名前を入力してください');
+                return;
+            }
+
+            if (!currentAnalysisData) {
+                alert('保存する分析結果がありません');
+                return;
+            }
+
+            const archives = loadArchives();
+            const archiveItem = {
+                id: Date.now(),
+                name: name,
+                date: new Date().toLocaleString('ja-JP'),
+                targetMargin: document.getElementById('target_gross_margin').value,
+                targetProfit: document.getElementById('target_net_profit').value,
+                usps: [...usps],
+                industries: [...industries],
+                data: currentAnalysisData
+            };
+
+            archives.push(archiveItem);
+            saveArchives(archives);
+
+            closeArchiveDialog();
+            renderArchiveList();
+            alert('アーカイブに保存しました！');
+        }
+
+        function renderArchiveList() {
+            const archives = loadArchives();
+            const container = document.getElementById('archive-content');
+
+            if (archives.length === 0) {
+                container.innerHTML = '<p style="color: #5f6368; text-align: center; padding: 40px;">まだアーカイブがありません。分析結果を保存してください。</p>';
+                return;
+            }
+
+            container.innerHTML = archives.reverse().map((archive, idx) => `
+                <div class="archive-item">
+                    <div class="archive-header">
+                        <div>
+                            <div class="archive-title">${escapeHtml(archive.name)}</div>
+                            <div class="archive-date">${archive.date}</div>
+                        </div>
+                        <button class="btn-danger" onclick="deleteArchive(${archive.id})">削除</button>
+                    </div>
+                    <div class="archive-meta">
+                        <span>粗利：${archive.targetMargin}万</span>
+                        <span>利益：${archive.targetProfit}万</span>
+                        <span>事業案：${archive.data.cases.length}個</span>
+                    </div>
+                    <div class="archive-content" id="archive-${archive.id}">
+                        ${renderArchivePreview(archive.data)}
+                    </div>
+                    <div class="archive-buttons">
+                        <button class="btn-secondary" onclick="toggleArchiveDetail(${archive.id})">詳細を表示</button>
+                        <button class="btn-export" onclick="exportArchivePDF(${archive.id})">PDF で出力</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderArchivePreview(data) {
+            return `
+                <p><strong>サマリー：</strong></p>
+                <p style="font-size: 12px; color: #5f6368; line-height: 1.6;">${escapeHtml(data.summary)}</p>
+                <div style="margin-top: 15px;">
+                    <strong>生成された事業案：</strong>
+                    <ul style="margin-left: 20px; margin-top: 8px; font-size: 12px;">
+                        ${data.cases.map(c => `<li>${escapeHtml(c.name)}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function toggleArchiveDetail(archiveId) {
+            const content = document.getElementById(`archive-${archiveId}`);
+            content.classList.toggle('expanded');
+        }
+
+        function deleteArchive(archiveId) {
+            if (!confirm('このアーカイブを削除しますか？')) return;
+
+            let archives = loadArchives();
+            archives = archives.filter(a => a.id !== archiveId);
+            saveArchives(archives);
+            renderArchiveList();
+        }
+
+        function exportArchivePDF(archiveId) {
+            const archives = loadArchives();
+            const archive = archives.find(a => a.id === archiveId);
+            if (!archive) return;
+
+            // PDF コンテンツを生成
+            const htmlContent = `
+                <h1>${escapeHtml(archive.name)}</h1>
+                <p>分析日時：${archive.date}</p>
+                <p>目標月粗利：${archive.targetMargin}万円 / 目標月純利益：${archive.targetProfit}万円</p>
+                <hr>
+                <h2>分析サマリー</h2>
+                <p>${escapeHtml(archive.data.summary)}</p>
+                <h2>生成された事業案</h2>
+                ${archive.data.cases.map((c, idx) => `
+                    <h3>${idx + 1}. ${escapeHtml(c.name)}</h3>
+                    <p><strong>概要：</strong> ${escapeHtml(c.overview)}</p>
+                    <p><strong>ビジネスモデル：</strong> ${escapeHtml(c.businessModel)}</p>
+                    <p><strong>初期投資：</strong> ${c.initialInvestment}万円</p>
+                    <p><strong>3年目売上：</strong> ${c.year3Revenue}万円 / 粗利：${c.year3GrossMargin}万円</p>
+                `).join('')}
+            `;
+
+            const element = document.createElement('div');
+            element.innerHTML = htmlContent;
+            const opt = {
+                margin: 10,
+                filename: `${archive.name}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function switchTab(btn, tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function resetForm() {
+            if (confirm('すべての入力をリセットしますか？')) {
+                usps = [];
+                industries = [];
+                businessCases = [];
+                currentAnalysisData = null;
+                document.getElementById('target_gross_margin').value = '300';
+                document.getElementById('target_net_profit').value = '100';
+                document.getElementById('context').value = '';
+                document.getElementById('usp-input').value = '';
+                document.getElementById('industry-input').value = '';
+                renderTags('usp');
+                renderTags('industry');
+                document.getElementById('dashboard').classList.remove('active');
+                hideError();
+            }
+        }
+
+        function exportPDF() {
+            const element = document.getElementById('dashboard');
+            const opt = {
+                margin: 10,
+                filename: '新規事業開発分析レポート.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // 初期化
+        renderTags('usp');
+        renderTags('industry');
+        renderArchiveList();
+    </script>
+</body>
+</html>
